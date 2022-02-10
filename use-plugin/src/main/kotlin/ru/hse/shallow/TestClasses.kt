@@ -6,15 +6,17 @@ data class A(val name: String)
 
 internal data class B(var isReady: Boolean)
 
-data class Inherit(val x: Int) : Serializable, Runnable {
+data class InheritInterface(val x: Int) : Serializable, Runnable {
     override fun run() {
         TODO("Not yet implemented")
     }
-
-    val y: Int = 0
 }
 
-data class NoBackField(val x: Char) {
+open class Base(val a: Int)
+
+data class InheritClass(val x: Int) : Base(x)
+
+data class NoBackField(val x: Char = 'a') {
     val y: Int
         get() = 0
 }
