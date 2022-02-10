@@ -34,7 +34,7 @@ val Meta.addShallowSizeMethod: CliPlugin
                 Transform.replace(
                     it.element,
                     """
-                        $`@annotations` $visibility $kind $name $`(typeParameters)` $`(params)` $superTypes {
+                        $`@annotations` $visibility $modality $kind $name $`(typeParameters)` $`(params)` $superTypes {
                         $body
                             fun $methodName() = 10
                         }
