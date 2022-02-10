@@ -16,18 +16,22 @@ import java.nio.file.Paths
  * limitations under the License.
  */
 
+val kotlinVersion: String by project
+val arrowMetaVersion: String by project
+val jvmTargetVersion: String by project
+
 plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.0")
-    compileOnly("io.arrow-kt:arrow-meta:1.5.0-SNAPSHOT")
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion")
+    compileOnly("io.arrow-kt:arrow-meta:$arrowMetaVersion")
 }
 
 tasks.compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = jvmTargetVersion
     }
 }
 

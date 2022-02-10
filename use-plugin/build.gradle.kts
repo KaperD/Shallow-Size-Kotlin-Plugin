@@ -16,25 +16,31 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val junitVersion: String by project
+val jvmTargetVersion: String by project
+
 plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 }
 
 tasks.compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar",
-            "-P", "plugin:arrow.meta.plugin.compiler:generatedSrcOutputDir=${buildDir}")
+        jvmTarget = jvmTargetVersion
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar",
+            "-P",
+            "plugin:arrow.meta.plugin.compiler:generatedSrcOutputDir=${buildDir}"
+        )
     }
 }
 
 tasks.compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = jvmTargetVersion
     }
 }
 
