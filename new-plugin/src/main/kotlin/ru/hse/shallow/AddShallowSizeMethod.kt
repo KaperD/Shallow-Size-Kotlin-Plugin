@@ -6,11 +6,13 @@ import arrow.meta.invoke
 import arrow.meta.quotes.Transform
 import arrow.meta.quotes.classDeclaration
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.backend.wasm.ir2wasm.getSuperClass
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irInt
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
 import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.properties
@@ -44,7 +46,7 @@ val Meta.addShallowSizeMethod: CliPlugin
                     clazz.functions.forEach {
                         if (it.name.toString() == methodName && it.valueParameters.isEmpty()) {
                             it.body = DeclarationIrBuilder(pluginContext, it.symbol).irBlockBody {
-                                +irReturn(irInt(clazz.shallowSize()))
+                                +irReturn(irInt(clazz.shallowSize(irBuiltIns)))
                             }
                         }
                     }
@@ -66,8 +68,12 @@ fun KtClass.hasShallowSizeMethod(): Boolean {
     return false
 }
 
-fun IrClass.shallowSize(): Int {
-    return properties.sumOf {
+fun IrClass.shallowSize(irBuiltIns: IrBuiltIns): Int {
+    var result = 0
+    getSuperClass(irBuiltIns)?.let {
+        result += it.shallowSize(irBuiltIns)
+    }
+    return result + properties.sumOf {
         val type = it.backingField?.type ?: return@sumOf 0
         return@sumOf when {
             type.isByte() -> Byte.SIZE_BYTES
