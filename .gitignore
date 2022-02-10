@@ -1,0 +1,4 @@
+.gradle
+build
+new-plugin/build
+use-plugin/build
