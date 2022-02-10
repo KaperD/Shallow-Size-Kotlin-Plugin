@@ -30,11 +30,7 @@ dependencies {
 tasks.compileKotlin {
     kotlinOptions {
         jvmTarget = jvmTargetVersion
-        freeCompilerArgs = freeCompilerArgs + listOf(
-            "-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar",
-            "-P",
-            "plugin:arrow.meta.plugin.compiler:generatedSrcOutputDir=${buildDir}"
-        )
+        freeCompilerArgs = freeCompilerArgs + "-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar"
     }
 }
 
