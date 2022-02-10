@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 /*
  * Copyright (C) 2020 The Arrow Authors
  *
@@ -15,31 +17,24 @@
  */
 
 plugins {
-    id "org.jetbrains.kotlin.jvm"
+    id("org.jetbrains.kotlin.jvm")
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.0")
+    compileOnly("io.arrow-kt:arrow-meta:1.5.0-SNAPSHOT")
 }
 
-compileKotlin {
+tasks.compileKotlin {
     kotlinOptions {
-        jvmTarget = "$JVM_TARGET_VERSION"
-        freeCompilerArgs += ["-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar",
-        "-P", "plugin:arrow.meta.plugin.compiler:generatedSrcOutputDir=${buildDir}"]
+        jvmTarget = "1.8"
     }
 }
 
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "$JVM_TARGET_VERSION"
-    }
-}
-
-test {
-    useJUnitPlatform()
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    compileTask -> compileTask.dependsOn ":new-plugin:assemble"
+tasks.jar {
+    from(
+        sourceSets.main.get().compileClasspath.find {
+            it.absolutePath.contains(Paths.get("arrow-kt", "arrow-meta").toString())
+        }?.let { zipTree(it) }
+    )
 }

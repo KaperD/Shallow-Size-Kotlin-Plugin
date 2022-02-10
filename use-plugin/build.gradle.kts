@@ -1,5 +1,3 @@
-import java.nio.file.Paths
-
 /*
  * Copyright (C) 2020 The Arrow Authors
  *
@@ -16,25 +14,34 @@ import java.nio.file.Paths
  * limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id "org.jetbrains.kotlin.jvm"
+    id("org.jetbrains.kotlin.jvm")
 }
 
 dependencies {
-    compileOnly "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
-    compileOnly "io.arrow-kt:arrow-meta:$ARROW_META_VERSION"
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
-compileKotlin {
+tasks.compileKotlin {
     kotlinOptions {
-        jvmTarget = "$JVM_TARGET_VERSION"
+        jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar",
+            "-P", "plugin:arrow.meta.plugin.compiler:generatedSrcOutputDir=${buildDir}")
     }
 }
 
-jar {
-    from(
-        zipTree(sourceSets.main.compileClasspath.find {
-            it.absolutePath.contains(Paths.get("arrow-kt", "arrow-meta").toString())
-        })
-    )
+tasks.compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile> {
+    dependsOn(":new-plugin:assemble")
 }
