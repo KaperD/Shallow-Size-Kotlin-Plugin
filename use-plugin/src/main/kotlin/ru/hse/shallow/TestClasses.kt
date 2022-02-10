@@ -39,6 +39,8 @@ data class NullablePrimitives(
     val b: Boolean?
 )
 
-data class HasShallowSize(val x: Int) {
-    fun shallowSize(): Long = 0
-}
+//data class HasShallowSize(val x: Int) {
+//    fun shallowSize(): Long = 0
+//}
+
+data class JavaCharacter(val x: Character)

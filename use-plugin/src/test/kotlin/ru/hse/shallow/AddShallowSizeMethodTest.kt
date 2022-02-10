@@ -54,9 +54,15 @@ class AddShallowSizeMethodTest {
         assertEquals(4 * pointerSize, x.shallowSize())
     }
 
+//    @Test
+//    fun `class has shallowSize function`() {
+//        val x = HasShallowSize(3)
+//        assertEquals(0L, x.shallowSize())
+//    }
+
     @Test
-    fun `class has shallowSize function`() {
-        val x = HasShallowSize(3)
-        assertEquals(Int.SIZE_BYTES, x.shallowSize())
+    fun `class with java Character field`() {
+        val x = JavaCharacter(Character('3'))
+        assertEquals(pointerSize, x.shallowSize())
     }
 }

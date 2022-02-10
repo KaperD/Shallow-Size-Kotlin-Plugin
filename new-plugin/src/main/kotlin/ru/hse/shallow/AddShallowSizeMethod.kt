@@ -6,6 +6,7 @@ import arrow.meta.invoke
 import arrow.meta.quotes.Transform
 import arrow.meta.quotes.classDeclaration
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irInt
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -13,6 +14,8 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtFunction
 
 const val methodName = "shallowSize"
 
@@ -20,6 +23,11 @@ val Meta.addShallowSizeMethod: CliPlugin
     get() = "Add shallowSize method to data classes" {
         meta(
             classDeclaration(this, { element.isData() }) {
+                if (it.element.hasShallowSizeMethod()) {
+                    val message = "Class ${it.element.name} already has method $methodName"
+                    messageCollector?.report(CompilerMessageSeverity.ERROR, message)
+                    error(message)
+                }
                 val superTypes = if (supertypes.isEmpty()) "" else ": $supertypes"
                 Transform.replace(
                     it.element,
@@ -45,6 +53,18 @@ val Meta.addShallowSizeMethod: CliPlugin
             },
         )
     }
+
+fun KtClass.hasShallowSizeMethod(): Boolean {
+    declarations.forEach {
+        if (it is KtFunction
+            && it.name == methodName
+            && it.valueParameters.isEmpty()
+        ) {
+            return true
+        }
+    }
+    return false
+}
 
 fun IrClass.shallowSize(): Int {
     return properties.sumOf {
