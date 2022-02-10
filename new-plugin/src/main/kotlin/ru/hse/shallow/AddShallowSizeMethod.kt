@@ -7,20 +7,18 @@ import arrow.meta.quotes.Transform
 import arrow.meta.quotes.classDeclaration
 
 val Meta.addShallowSizeMethod: CliPlugin
-    get() = "Transform New Multiple Source" {
+    get() = "Add shallowSize method to data classes" {
         meta(
-            classDeclaration(this, { element.name == "NewMultipleSource" }) {
-                Transform.newSources(
+            classDeclaration(this, { element.isData() }) {
+                val superTypes = if (supertypes.isEmpty()) "" else ": $supertypes"
+                Transform.replace(
+                    it.element,
                     """
-          |package arrow
-          |         
-          |class ${name}_Generated
-          """.trimMargin().file("${name}_Generated"), // default path: generated/source/kapt/main
-                    """
-          |package arrow
-          |
-          |class ${name}_Generated_2
-          """.trimMargin().file("${name}_Generated_2", "generated/custom/directory")
+                        $`@annotations` $visibility $kind $name $`(typeParameters)` $`(params)` $superTypes {
+                        $body
+                            fun shallowSize() = 10
+                        }
+                    """.trimIndent().`class`
                 )
             }
         )
