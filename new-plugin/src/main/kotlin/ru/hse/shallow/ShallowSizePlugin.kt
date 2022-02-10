@@ -1,14 +1,14 @@
-package io.arrowkt.example
+package ru.hse.shallow
 
 import arrow.meta.CliPlugin
 import arrow.meta.Meta
 import arrow.meta.phases.CompilerContext
 import kotlin.contracts.ExperimentalContracts
 
-class MetaPlugin : Meta {
-    @ExperimentalContracts
+@ExperimentalContracts
+class ShallowSizePlugin : Meta {
     override fun intercept(ctx: CompilerContext): List<CliPlugin> =
         listOf(
-          transformNewSources
+            addShallowSizeMethod
         )
 }
