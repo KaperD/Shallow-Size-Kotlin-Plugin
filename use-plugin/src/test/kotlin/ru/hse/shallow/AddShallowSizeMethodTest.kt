@@ -65,4 +65,22 @@ class AddShallowSizeMethodTest {
         val x = JavaCharacter(Character('3'))
         assertEquals(pointerSize, x.shallowSize())
     }
+
+    @Test
+    fun `class with no explicit type field`() {
+        val x = NoExplicitType(3)
+        assertEquals(Int.SIZE_BYTES + Long.SIZE_BYTES, x.shallowSize())
+    }
+
+    @Test
+    fun `class with override field from class`() {
+        val x = OverrideFieldFromClass(4)
+        assertEquals(2 * Int.SIZE_BYTES, x.shallowSize())
+    }
+
+    @Test
+    fun `class with override field from interface`() {
+        val x = OverrideFieldFromInterface(4)
+        assertEquals(Int.SIZE_BYTES, x.shallowSize())
+    }
 }

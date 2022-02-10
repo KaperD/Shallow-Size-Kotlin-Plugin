@@ -12,7 +12,7 @@ data class InheritInterface(val x: Int) : Serializable, Runnable {
     }
 }
 
-open class Base(val a: Int)
+open class Base(open val a: Int)
 
 data class InheritClass(val x: Int) : Base(x)
 
@@ -44,3 +44,16 @@ data class NullablePrimitives(
 //}
 
 data class JavaCharacter(val x: Character)
+
+data class NoExplicitType(val x: Int) {
+    val y = 10L
+}
+
+interface BaseInterface {
+    val a: Int
+}
+
+data class OverrideFieldFromClass(override val a: Int) : Base(3)
+
+data class OverrideFieldFromInterface(override val a: Int) : BaseInterface
+
