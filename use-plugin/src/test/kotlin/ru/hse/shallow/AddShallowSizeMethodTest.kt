@@ -53,4 +53,10 @@ class AddShallowSizeMethodTest {
         val x = NullablePrimitives(1f, 1.0, 'c', true)
         assertEquals(4 * pointerSize, x.shallowSize())
     }
+
+    @Test
+    fun `class has shallowSize function`() {
+        val x = HasShallowSize(3)
+        assertEquals(Int.SIZE_BYTES, x.shallowSize())
+    }
 }
