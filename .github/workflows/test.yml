@@ -16,3 +16,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: use-plugin:test
+      - name: Upload plugin jar
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: shallow-size-plugin
+          path: new-plugin/build/libs/shallow-size-plugin.jar

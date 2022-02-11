@@ -36,6 +36,7 @@ tasks.compileKotlin {
 }
 
 tasks.jar {
+    archiveBaseName.set("shallow-size-plugin")
     from(
         sourceSets.main.get().compileClasspath.find {
             it.absolutePath.contains(Paths.get("arrow-kt", "arrow-meta").toString())

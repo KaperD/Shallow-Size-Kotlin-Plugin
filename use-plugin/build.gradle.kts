@@ -30,7 +30,7 @@ dependencies {
 tasks.compileKotlin {
     kotlinOptions {
         jvmTarget = jvmTargetVersion
-        freeCompilerArgs = freeCompilerArgs + "-Xplugin=${rootDir}/new-plugin/build/libs/new-plugin.jar"
+        freeCompilerArgs = freeCompilerArgs + "-Xplugin=${rootDir}/new-plugin/build/libs/shallow-size-plugin.jar"
     }
 }
 
