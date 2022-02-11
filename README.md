@@ -15,7 +15,7 @@ Pointer size is considered as 4 bytes, Boolean size as 1 byte, other primitive t
 ### Steps
 1. Get plugin shallow-size-plugin.jar file
    - Download it from GitHub Releases
-   - Or clone this repo, run `./gradlew new-plugin:jar` and get jar from new-plugin/build/libs/
+   - Or clone this repo, run `./gradlew shallow-size-plugin:jar` and get jar from shallow-size-plugin/build/libs/
 2. Add this to your build.gradle.kts:
 ```kotlin
 tasks.withType<KotlinCompile> {

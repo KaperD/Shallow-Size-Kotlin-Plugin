@@ -2,5 +2,5 @@
 .idea
 .DS_Store
 build
-new-plugin/build
+shallow-size-plugin/build
 use-plugin/build
