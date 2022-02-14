@@ -28,7 +28,7 @@ val Meta.addShallowSizeMethod: CliPlugin
                 if (it.element.hasShallowSizeMethod()) {
                     val message = "Class ${it.element.name} already has method $methodName"
                     messageCollector?.report(CompilerMessageSeverity.ERROR, message)
-                    error(message)
+                    return@classDeclaration Transform.empty
                 }
                 val superTypes = if (supertypes.isEmpty()) "" else ": $supertypes"
                 Transform.replace(

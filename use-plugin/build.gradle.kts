@@ -25,6 +25,7 @@ plugins {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.7")
 }
 
 tasks.compileKotlin {

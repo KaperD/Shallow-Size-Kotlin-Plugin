@@ -1,7 +1,11 @@
 package ru.hse.shallow
 
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.io.File
 
 const val pointerSize = 4
 
@@ -54,12 +58,6 @@ class AddShallowSizeMethodTest {
         assertEquals(4 * pointerSize, x.shallowSize())
     }
 
-//    @Test
-//    fun `class has shallowSize function`() {
-//        val x = HasShallowSize(3)
-//        assertEquals(0L, x.shallowSize())
-//    }
-
     @Test
     fun `class with java Character field`() {
         val x = JavaCharacter(Character('3'))
@@ -82,5 +80,25 @@ class AddShallowSizeMethodTest {
     fun `class with override field from interface`() {
         val x = OverrideFieldFromInterface(4)
         assertEquals(Int.SIZE_BYTES, x.shallowSize())
+    }
+
+    @Test
+    fun `class has shallowSize function don't compile`() {
+        val kotlinSource = SourceFile.kotlin(
+            "KClass.kt",
+            """
+                data class HasShallowSize(val x: Int) {
+                    fun shallowSize(): Long = 0
+                }
+            """.trimIndent()
+        )
+        val result = KotlinCompilation().apply {
+            sources = listOf(kotlinSource)
+            inheritClassPath = true
+            pluginClasspaths = listOf(File("../shallow-size-plugin/build/libs/shallow-size-plugin.jar"))
+            messageOutputStream = System.out
+        }.compile()
+        assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.exitCode)
+        assertTrue(result.messages.contains("Class HasShallowSize already has method shallowSize"))
     }
 }
